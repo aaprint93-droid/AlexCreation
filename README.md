@@ -1,0 +1,1 @@
+Replace logo and images in assets/images then publish with GitHub Pages.
