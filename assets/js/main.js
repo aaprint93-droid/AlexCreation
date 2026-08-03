@@ -82,7 +82,8 @@ const translations = {
   'Client stories': 'Historias de clientes', 'Trusted in every': 'Confianza en cada', 'detail that matters.': 'detalle que importa.', 'Our best work is a client who is happy to recommend us to a neighbor, friend or family member.': 'Nuestro mejor trabajo es un cliente feliz de recomendarnos a sus vecinos, amigos y familiares.',
   '“They were professional from the first conversation through the final detail. Our deck became the favorite part of our home.”': '“Fueron profesionales desde la primera conversación hasta el último detalle. Nuestro deck se convirtió en la parte favorita de la casa.”', 'Deck Project': 'Proyecto de deck', '“The team kept everything clean, communicated constantly and delivered exactly what we discussed. Outstanding work.”': '“El equipo mantuvo todo limpio, se comunicó constantemente y entregó exactamente lo que hablamos. Trabajo excepcional.”', '“Reliable, respectful and incredibly detailed. I would absolutely call Alex Creation again for our next project.”': '“Confiables, respetuosos y muy detallistas. Sin duda llamaré a Alex Creation para nuestro próximo proyecto.”', 'Concrete & Fence': 'Concreto y cercas',
   'Common questions': 'Preguntas frecuentes', 'Everything starts with a': 'Todo comienza con una', 'conversation.': 'conversación.', 'Do you offer free estimates?': '¿Ofrecen presupuestos gratis?', 'Yes. Tell us about your project and we’ll arrange a free consultation to understand your goals and provide an estimate.': 'Sí. Cuéntanos sobre tu proyecto y coordinaremos una consulta gratuita para conocer tus objetivos y ofrecerte un presupuesto.', 'What areas do you serve?': '¿Qué áreas atienden?', 'We proudly serve Newark and surrounding areas in New Jersey. Contact us to confirm availability for your location.': 'Atendemos Newark y zonas cercanas de Nueva Jersey. Contáctanos para confirmar disponibilidad en tu ubicación.', 'How do I get started?': '¿Cómo puedo comenzar?', 'Use the estimate form or call us directly. We will discuss your project, timeline and next steps.': 'Usa el formulario de presupuesto o llámanos directamente. Hablaremos de tu proyecto, tiempos y próximos pasos.',
-  'Free estimate': 'Presupuesto gratis', 'Tell us about your': 'Cuéntanos sobre tu', 'project.': 'proyecto.', 'Full name': 'Nombre completo', 'Phone number': 'Número de teléfono', 'Email address': 'Correo electrónico', 'Service': 'Servicio', 'Project details': 'Detalles del proyecto', 'Request on WhatsApp': 'Solicitar por WhatsApp', 'Your information is only used to respond to your request.': 'Tu información se utilizará solo para responder a tu solicitud.', 'Interior Remodeling': 'Remodelación interior', 'Exterior Remodeling': 'Remodelación exterior'
+  'Free estimate': 'Presupuesto gratis', 'Tell us about your': 'Cuéntanos sobre tu', 'project.': 'proyecto.', 'Full name': 'Nombre completo', 'Phone number': 'Número de teléfono', 'Email address': 'Correo electrónico', 'Service': 'Servicio', 'Project details': 'Detalles del proyecto', 'Request on WhatsApp': 'Solicitar por WhatsApp', 'Your information is only used to respond to your request.': 'Tu información se utilizará solo para responder a tu solicitud.', 'Interior Remodeling': 'Remodelación interior', 'Exterior Remodeling': 'Remodelación exterior',
+  'Made around your home': 'Pensado para tu hogar', 'One team for every': 'Un solo equipo para cada', 'important detail.': 'detalle importante.', 'Whether you are refreshing one area or reimagining your entire home, we coordinate every detail so the experience feels simple from start to finish.': 'Ya sea que renueves un área o transformes toda tu casa, coordinamos cada detalle para que la experiencia sea sencilla de principio a fin.', 'Built for your space': 'Hecho para tu espacio', 'Solutions tailored to your home and lifestyle.': 'Soluciones adaptadas a tu hogar y estilo de vida.', 'Crafted with care': 'Hecho con cuidado', 'Clean job sites and detail-focused workmanship.': 'Áreas de trabajo limpias y atención a cada detalle.', 'Reliable from day one': 'Confiable desde el primer día', 'Clear next steps and a team you can reach.': 'Próximos pasos claros y un equipo disponible para ti.', 'Plan your project': 'Planifica tu proyecto'
 };
 
 const originalText = new WeakMap();
@@ -107,9 +108,26 @@ const translatePage = language => {
   document.documentElement.lang = language;
   document.getElementById('language-toggle').innerHTML = language === 'es' ? 'EN <span>/ ES</span>' : 'ES <span>/ EN</span>';
   document.getElementById('language-toggle').setAttribute('aria-label', language === 'es' ? 'Switch to English' : 'Cambiar idioma');
-  localStorage.setItem('alex-language', language);
+  try {
+    localStorage.setItem('alex-language', language);
+  } catch (_) {
+    // Browsers can restrict storage when the page is opened directly as a local file.
+  }
 };
 
-const initialLanguage = localStorage.getItem('alex-language') || 'en';
+let initialLanguage = 'en';
+try {
+  initialLanguage = localStorage.getItem('alex-language') || 'en';
+} catch (_) {
+  // Keep English as the default when local storage is unavailable.
+}
 translatePage(initialLanguage);
-document.getElementById('language-toggle')?.addEventListener('click', () => translatePage(document.documentElement.lang === 'es' ? 'en' : 'es'));
+document.getElementById('language-toggle')?.addEventListener('click', event => {
+  event.preventDefault();
+  translatePage(document.documentElement.lang === 'es' ? 'en' : 'es');
+});
+
+document.querySelectorAll('.service-card a').forEach((link, index) => link.addEventListener('click', () => {
+  const serviceSelect = document.querySelector('select[name="service"]');
+  if (serviceSelect) serviceSelect.selectedIndex = index;
+}));
