@@ -131,3 +131,32 @@ document.querySelectorAll('.service-card a').forEach((link, index) => link.addEv
   const serviceSelect = document.querySelector('select[name="service"]');
   if (serviceSelect) serviceSelect.selectedIndex = index;
 }));
+
+const serviceDetails = [
+  { en: 'Decks', es: 'Decks', enText: 'From intimate platforms to complete backyard transformations, we design and build decks made for the way you live outdoors.', esText: 'Desde plataformas acogedoras hasta transformaciones completas del patio, diseñamos y construimos decks para disfrutar tu vida al aire libre.', images: ['https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=85','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=650&q=85','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=650&q=85'] },
+  { en: 'Fences', es: 'Cercas', enText: 'Privacy, security and a finished look for your property. Explore durable fence solutions tailored to your home.', esText: 'Privacidad, seguridad y una apariencia terminada para tu propiedad. Explora cercas duraderas adaptadas a tu hogar.', images: ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1000&q=85','https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=650&q=85','https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=650&q=85'] },
+  { en: 'Concrete', es: 'Concreto', enText: 'A solid foundation for driveways, walkways and patios. We focus on clean finishes built to take daily use.', esText: 'Una base sólida para entradas, caminos y patios. Nos enfocamos en acabados limpios hechos para el uso diario.', images: ['https://images.unsplash.com/photo-1590582791038-2d68a1c77b22?auto=format&fit=crop&w=1000&q=85','https://images.unsplash.com/photo-1542223616-6e8a5523cf60?auto=format&fit=crop&w=650&q=85','https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=650&q=85'] },
+  { en: 'Vinyl Flooring', es: 'Pisos de vinilo', enText: 'Practical performance meets refined style. Discover flooring that is beautiful, comfortable and simple to maintain.', esText: 'Rendimiento práctico y estilo refinado. Descubre pisos hermosos, cómodos y fáciles de mantener.', images: ['https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1000&q=85','https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?auto=format&fit=crop&w=650&q=85','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=650&q=85'] },
+  { en: 'Interior Remodeling', es: 'Remodelación interior', enText: 'Kitchens, bathrooms and living spaces thoughtfully updated around your needs, taste and everyday routines.', esText: 'Cocinas, baños y espacios interiores renovados cuidadosamente para tus necesidades, estilo y rutina diaria.', images: ['https://images.unsplash.com/photo-1600585152915-d208bec867a1?auto=format&fit=crop&w=1000&q=85','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=650&q=85','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=650&q=85'] },
+  { en: 'Exterior Remodeling', es: 'Remodelación exterior', enText: 'Elevate curb appeal and protect your investment with exterior work designed to look great for years to come.', esText: 'Mejora la fachada y protege tu inversión con trabajo exterior diseñado para lucir excelente por muchos años.', images: ['https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1000&q=85','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=650&q=85','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=650&q=85'] }
+];
+
+const modal = document.getElementById('service-modal');
+const modalContent = document.getElementById('service-modal-content');
+const showServiceModal = index => {
+  const service = serviceDetails[index];
+  if (!service || !modal) return;
+  const spanish = document.documentElement.lang === 'es';
+  const name = spanish ? service.es : service.en;
+  const text = spanish ? service.esText : service.enText;
+  modalContent.innerHTML = `<div class="modal-content"><div class="modal-gallery">${service.images.map((image, imageIndex) => `<img src="${image}" alt="${name} project ${imageIndex + 1}">`).join('')}</div><div class="modal-copy"><p class="overline">${spanish ? 'Servicio destacado' : 'Featured service'}</p><h2>${name}<span>${spanish ? 'Hecho para tu hogar.' : 'Made for your home.'}</span></h2><p>${text}</p><a class="button button-gold" href="https://wa.me/12013961606?text=${encodeURIComponent(spanish ? `Hola Alex Creation, me interesa el servicio de ${name}.` : `Hello Alex Creation, I am interested in your ${name} service.`)}">${spanish ? 'Solicitar presupuesto' : 'Request an estimate'} <i class="fa-brands fa-whatsapp"></i></a><small>${spanish ? 'Imágenes de referencia de proyectos y estilos.' : 'Reference images of project styles and finishes.'}</small></div></div>`;
+  if (typeof modal.showModal === 'function') modal.showModal();
+  else modal.setAttribute('open', '');
+};
+
+document.querySelectorAll('.service-card a').forEach((link, index) => link.addEventListener('click', event => {
+  event.preventDefault();
+  showServiceModal(index);
+}));
+document.querySelector('.modal-close')?.addEventListener('click', () => modal?.close());
+modal?.addEventListener('click', event => { if (event.target === modal) modal.close(); });
