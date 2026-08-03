@@ -29,3 +29,26 @@ const countUp = () => document.querySelectorAll('[data-count]').forEach(item => 
 });
 countUp();
 document.getElementById('year').textContent = new Date().getFullYear();
+
+document.querySelectorAll('.filter').forEach(button => button.addEventListener('click', () => {
+  document.querySelectorAll('.filter').forEach(item => item.classList.remove('active'));
+  button.classList.add('active');
+  const filter = button.dataset.filter;
+  document.querySelectorAll('.project').forEach(project => {
+    project.classList.toggle('hidden', filter !== 'all' && project.dataset.category !== filter);
+  });
+}));
+
+document.getElementById('estimate-form')?.addEventListener('submit', event => {
+  event.preventDefault();
+  const values = new FormData(event.currentTarget);
+  const message = [
+    'Hello Alex Creation, I would like a free estimate.',
+    `Name: ${values.get('name')}`,
+    `Phone: ${values.get('phone')}`,
+    `Email: ${values.get('email') || 'Not provided'}`,
+    `Service: ${values.get('service')}`,
+    `Project details: ${values.get('details')}`
+  ].join('\n');
+  window.open(`https://wa.me/12013961606?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
+});
